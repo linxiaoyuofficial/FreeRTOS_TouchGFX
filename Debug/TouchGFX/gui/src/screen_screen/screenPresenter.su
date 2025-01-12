@@ -1,0 +1,6 @@
+../TouchGFX/gui/include/gui/screen_screen/screenPresenter.hpp:28:13:screenPresenter::~screenPresenter()	0	static
+../TouchGFX/gui/src/screen_screen/screenPresenter.cpp:10:6:virtual void screenPresenter::activate()	0	static
+../TouchGFX/gui/include/gui/screen_screen/screenPresenter.hpp:28:13:virtual screenPresenter::~screenPresenter()	8	static
+../TouchGFX/gui/include/gui/screen_screen/screenPresenter.hpp:28:13:virtual void* screenPresenter::_ZThn4_N15screenPresenterD1Ev()	0	static
+../TouchGFX/gui/include/gui/screen_screen/screenPresenter.hpp:28:13:virtual void* screenPresenter::_ZThn4_N15screenPresenterD0Ev()	8	static
+../TouchGFX/gui/src/screen_screen/screenPresenter.cpp:4:1:screenPresenter::screenPresenter(screenView&)	4	static

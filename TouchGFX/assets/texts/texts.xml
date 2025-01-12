@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="texts.xsd" Version="4.24.1">
+  <Languages>
+    <Language Id="GB" />
+  </Languages>
+  <Texts>
+    <TextGroup Id="Group1" />
+    <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_K6EF" Alignment="Left" TypographyId="Chinese">
+        <Translation Language="GB">新的文本</Translation>
+      </Text>
+      <Text Id="__SingleUse_UUR0" Alignment="Left" TypographyId="Chinese">
+        <Translation Language="GB">New Text</Translation>
+      </Text>
+      <Text Id="__SingleUse_ZM39" Alignment="Center" TypographyId="Chinese">
+        <Translation Language="GB">文本1</Translation>
+      </Text>
+      <Text Id="__SingleUse_APAO" Alignment="Center" TypographyId="Chinese">
+        <Translation Language="GB">文本2</Translation>
+      </Text>
+      <Text Id="__SingleUse_8CBL" Alignment="Left" TypographyId="Chinese">
+        <Translation Language="GB">NULL</Translation>
+      </Text>
+    </TextGroup>
+  </Texts>
+  <Typographies>
+    <Typography Id="Default" Font="verdana.ttf" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="Large" Font="verdana.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="Chinese" Font="Microsoft_Yahei.ttf" Size="24" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+  </Typographies>
+</TextDatabase>

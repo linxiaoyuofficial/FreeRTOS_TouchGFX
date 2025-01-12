@@ -1,0 +1,8 @@
+../Core/Src/touch_800x480.c:36:6:GT9XX_Reset	8	static
+../Core/Src/touch_800x480.c:65:9:GT9XX_WriteHandle	8	static
+../Core/Src/touch_800x480.c:94:9:GT9XX_WriteData	16	static
+../Core/Src/touch_800x480.c:124:9:GT9XX_WriteReg	16	static
+../Core/Src/touch_800x480.c:159:9:GT9XX_ReadReg	24	static
+../Core/Src/touch_800x480.c:203:6:PanelRecognition	48	static
+../Core/Src/touch_800x480.c:243:9:Touch_Init	32	static
+../Core/Src/touch_800x480.c:299:6:Touch_Scan	72	static
