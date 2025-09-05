@@ -44,6 +44,7 @@ _Min_Stack_Size = 0x1000; /* required amount of stack */
 MEMORY
 {
   FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 2048K
+  QSPIFLASH (rx) : ORIGIN = 0x90000000, LENGTH = 8192K
   DTCMRAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 128K
   RAM_D1 (xrw)   : ORIGIN = 0x24000000, LENGTH = 512K
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K
@@ -173,6 +174,38 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
+
+  *Enable RAM_D2 Memory*/
+  .ram_d2 :
+  {
+    . = ALIGN(4);
+    *(.ram_d2)
+    . = ALIGN(4);
+  } >RAM_D2
+  
+    /*Enable RAM_D3 Memory*/
+  .ram_d3 :
+  {
+    . = ALIGN(4);
+    *(.ram_d3)
+    . = ALIGN(4);
+  } >RAM_D3
+  
+  /*Enable SDRAM Frame Buffer*/
+  .sdram :
+  {
+    . = ALIGN(4);
+    *(.sdram)
+    . = ALIGN(4);
+  } >SDRAM
+  
+  /* Use External FLASH */
+  ExtFlashSection :
+  {
+     *(ExtFlashSection ExtFlashSection.*)
+     *(FontFlashSection FontFlashSection*)
+     . = ALIGN(0x4);
+  } >QSPIFLASH
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
