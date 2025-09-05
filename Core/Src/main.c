@@ -228,7 +228,6 @@ void BSP_Init(void)
 	MX_FATFS_Init();
 	MX_CRC_Init();
 
-	LCD_RGB_Init();
 	LED_Init();
 }
 /* USER CODE END 4 */

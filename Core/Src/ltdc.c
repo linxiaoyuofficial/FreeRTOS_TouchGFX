@@ -29,7 +29,7 @@
 LTDC_HandleTypeDef hltdc;
 
 /* LTDC init function */
-/*void MX_LTDC_Init(void)
+void MX_LTDC_Init(void)
 {
 
    USER CODE BEGIN LTDC_Init 0
@@ -80,151 +80,8 @@ LTDC_HandleTypeDef hltdc;
   {
     Error_Handler();
   }
-   USER CODE BEGIN LTDC_Init 2
-
-   USER CODE END LTDC_Init 2
-
-}*/
-
-/*************************************************************************************************
-*	函 数 名:	MX_LTDC_Init
-*	入口参数:	无
-*	返 回 值:	无
-*	函数功能:	初始化LTDC引脚的IO口、全局参数、层设置等
-*	说    明:	无
-*************************************************************************************************/
-
-void MX_LTDC_Init(void)
-{
-
-  /* USER CODE BEGIN LTDC_Init 0 */
-
-  /* USER CODE END LTDC_Init 0 */
-
-  LTDC_LayerCfgTypeDef pLayerCfg = {0};		          // layer0 相关参数
-
-  /* USER CODE BEGIN LTDC_Init 1 */
-
-  /* USER CODE END LTDC_Init 1 */
-  hltdc.Instance = LTDC;                              // LTCD句柄配置
-  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;         // 低电平有效
-  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;	      // 低电平有效
-  hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;	      // 低电平有效，要注意的是，很多面板都是高电平有效，但是750需要设置成低电平才能正常显示
-  hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;	      // 正常时钟
-  /*-------------以下参数根据屏幕设置---------------*/
-//  hltdc.Init.HorizontalSync = 0;
-//  hltdc.Init.VerticalSync = 0;
-//  hltdc.Init.AccumulatedHBP = 80;
-//  hltdc.Init.AccumulatedVBP = 20;
-//  hltdc.Init.AccumulatedActiveW = 880;
-//  hltdc.Init.AccumulatedActiveH = 500;
-//  hltdc.Init.TotalWidth = 1080;
-//  hltdc.Init.TotalHeigh = 522;
-  hltdc.Init.HorizontalSync 	= HSW - 1;
-  hltdc.Init.VerticalSync 		= VSW	-1 ;
-  hltdc.Init.AccumulatedHBP		= HBP + HSW -1;
-  hltdc.Init.AccumulatedVBP 	= VBP + VSW -1;
-  hltdc.Init.AccumulatedActiveW = LCD_Width  + HSW + HBP -1;
-  hltdc.Init.AccumulatedActiveH = LCD_Height + VSW + VBP -1;
-  hltdc.Init.TotalWidth 		= LCD_Width  + HSW + HBP + HFP - 1;
-  hltdc.Init.TotalHeigh 		= LCD_Height + VSW + VBP + VFP - 1;
-/*-----------------背景色初始化-------------------*/
-  hltdc.Init.Backcolor.Blue = 0;
-  hltdc.Init.Backcolor.Green = 0;
-  hltdc.Init.Backcolor.Red = 0;
-  /*--------------LTDC参数初始化-----------------*/
-  if (HAL_LTDC_Init(&hltdc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /*---------------------------------- layer0 显示配置 --------------------------------*/
-  pLayerCfg.WindowX0 		= 0;							 // 水平起点
-  pLayerCfg.WindowX1 		= LCD_Width;					 // 水平终点
-  pLayerCfg.WindowY0 		= 0;							 // 垂直起点
-  pLayerCfg.WindowY1 		= LCD_Height;					 // 垂直终点
-  pLayerCfg.ImageWidth 		= LCD_Width;                     // 显示区域宽度
-  pLayerCfg.ImageHeight 	= LCD_Height;                    // 显示区域高度
-  pLayerCfg.PixelFormat 	= ColorMode_0;					 // 颜色格式
-
-//	配置 layer0 的恒定透明度，最终写入 LTDC_LxCACR 寄存器
-//	需要注意的是，这个参数是直接配置整个 layer0 的透明度，这里设置为255即不透明
-  pLayerCfg.Alpha = 255;//layer0恒定透明度
-
-// 设置 layer0 的层混合系数，最终写入 LTDC_LxBFCR 寄存器
-// 该参数用于设置 layer0 和 底层背景 之间的颜色混合系数，计算公式为 ：
-// 混合后的颜色 =  BF1 * layer0的颜色 + BF2 * 底层背景的颜色
-// 如果 layer0 使用了透明色，则必须配置成 LTDC_BLENDING_FACTOR1_PAxCA 和 LTDC_BLENDING_FACTOR2_PAxCA，否则ARGB中的A通道不起作用
-  pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;		// 混合系数1
-  pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;		// 混合系数2
-
-  pLayerCfg.FBStartAdress = LCD_MemoryAdd;                	// 显存地址
-// 配置 layer0 的初始默认颜色，包括A,R,G,B 的值 ，最终写入 LTDC_LxDCCR 寄存器
-  pLayerCfg.Alpha0          = 0;//layer0初始颜色，A
-  pLayerCfg.Backcolor.Red   = 0;//layer0初始颜色，R
-  pLayerCfg.Backcolor.Green = 0;//layer0初始颜色，G
-  pLayerCfg.Backcolor.Blue  = 0;//layer0初始颜色，B
-
-  /*-------------layer0参数初始化----------------*/
-  if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-/*-------------判断是否使用24位或者32位色----------------*/
-#if ( ( ColorMode_0 == LTDC_PIXEL_FORMAT_RGB888 )||( ColorMode_0 == LTDC_PIXEL_FORMAT_ARGB8888 ) ) // 判断是否使用24位或者32位色
-
-// 因为750每个通道的低位都是采用伪随机抖动输出，如果不开启颜色抖动，则无法正常显示24位或者32位色
-
-	HAL_LTDC_EnableDither(&hltdc); // 开启颜色抖动
-
-#endif
-
-/*---------------------------------- layer1 显示配置 --------------------------------*/
-
-#if ( LCD_NUM_LAYERS == 2 )	//如果定义了双层
-
-  LTDC_LayerCfgTypeDef pLayerCfg1 = {0};
-
-  pLayerCfg1.WindowX0    = 0;                       // 水平起点
-  pLayerCfg1.WindowX1    = LCD_Width;               // 水平终点
-  pLayerCfg1.WindowY0    = 0;                       // 垂直起点
-  pLayerCfg1.WindowY1    = LCD_Height;              // 垂直终点
-  pLayerCfg1.ImageWidth  = LCD_Width;               // 显示区域宽度
-  pLayerCfg1.ImageHeight = LCD_Height;              // 显示区域高度
-  pLayerCfg1.PixelFormat = ColorMode_1;             // 颜色格式，layer1 应配置为带有透明色的格式，例如ARGB8888或ARGB1555
-
-//   配置 layer1 的恒定透明度，最终写入 LTDC_LxCACR 寄存器
-//   需要注意的是，这个参数是直接配置整个 layer1 的透明度，这里设置为255即不透明
-  pLayerCfg1.Alpha = 255;//layer1恒定透明度
-//   如果 layer1 使用了透明色，则必须配置成 LTDC_BLENDING_FACTOR1_PAxCA 和 LTDC_BLENDING_FACTOR2_PAxCA，否则ARGB中的A通道不起作用
-//   更多的介绍可以查阅 参考手册关于 LTDC_LxBFCR 寄存器的介绍
-  pLayerCfg1.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;// 混合系数1
-  pLayerCfg1.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;// 混合系数2
-
-  pLayerCfg1.FBStartAdress = LCD_MemoryAdd + LCD_MemoryAdd_OFFSET;
-
-  pLayerCfg1.Alpha0           = 0;//layer1初始颜色，A
-  pLayerCfg1.Backcolor.Red    = 0;//layer1初始颜色，R
-  pLayerCfg1.Backcolor.Green  = 0;//layer1初始颜色，G
-  pLayerCfg1.Backcolor.Blue   = 0;//layer1初始颜色，B
-
-  /*-------------layer1参数初始化----------------*/
-  if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg1, 1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-#if ( ( ColorMode_1 == LTDC_PIXEL_FORMAT_RGB888 )||( ColorMode_1 == LTDC_PIXEL_FORMAT_ARGB8888 ) ) // 判断是否使用24位或者32位色
-
-	// 因为750每个通道的低位都是采用伪随机抖动输出，如果不开启颜色抖动，则无法正常显示24位或者32位色
-
-		HAL_LTDC_EnableDither(&hltdc); // 开启颜色抖动
-
-	#endif
-
-#endif
   /* USER CODE BEGIN LTDC_Init 2 */
-//	HAL_LTDC_ProgramLineEvent(&hltdc, 0);	    		// 设置行中断，第0行
-//	HAL_NVIC_SetPriority(LTDC_IRQn, 15, 0);		    	// 设置优先级
-//	HAL_NVIC_EnableIRQ(LTDC_IRQn);						// 使能中断
+  LCD_Backlight_ON;
   /* USER CODE END LTDC_Init 2 */
 
 }
